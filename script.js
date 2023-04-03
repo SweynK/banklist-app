@@ -245,20 +245,3 @@ window.addEventListener('keydown', function (e) {
   e.key === 'ArrowRight' && nextSlide();
   e.key === 'ArrowLeft' && prevSlide();
 });
-
-// const message = document.createElement('div');
-// message.classList.add('cookie-message');
-// // message.textContent = 'we use cookies for improved functionality and analytics';
-// message.innerHTML =
-//   'we use cookied for improved functionality and analytics.<button class="btn btn--close-cookie">Got it!</button>';
-// //
-// // const header = document.querySelector('.header');
-// header.append(message);
-// document.querySelector('.btn--close-cookie').addEventListener('click', () => {
-//   message.remove();
-// });
-
-// message.style.backgroundColor = '#37383d';
-// message.style.width = '100%';
-// message.style.height =
-//   Number.parseFloat(getComputedStyle(message).height, 10) + 30 + 'px';
