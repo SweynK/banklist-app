@@ -13,6 +13,10 @@ const tabsContent = document.querySelectorAll('.operations__content');
 const header = document.querySelector('header');
 const allSections = document.querySelectorAll('.section');
 const imgTargets = document.querySelectorAll('img[data-src]');
+const slides = document.querySelectorAll('.slide');
+const btnRight = document.querySelector('.slider__btn--right');
+const btnLeft = document.querySelector('.slider__btn--left');
+const dotContainer = document.querySelector('.dots');
 
 ///////////////////////////////////////
 // Modal window
@@ -141,11 +145,11 @@ const revealSection = function (enteries, observer) {
 
 const sectionObserver = new IntersectionObserver(revealSection, {
   root: null,
-  treshold: 0.3,
+  treshold: 0.15,
 });
 allSections.forEach(function (section) {
   sectionObserver.observe(section);
-  section.classList.add('section--hidden');
+  // section.classList.add('section--hidden');
 });
 
 //////////
@@ -153,7 +157,6 @@ allSections.forEach(function (section) {
 
 const loadImg = function (enteries, observer) {
   const [entry] = enteries;
-  console.log(entry);
   if (!entry.isIntersecting) return;
 
   // replace src with data-src
@@ -174,14 +177,82 @@ imgTargets.forEach(function (img) {
 });
 
 ///////////////
-///////
+/////// slider
+
+let curSlide = 0;
+let maxSlide = slides.length - 1;
+
+const goToSlide = function (slide) {
+  slides.forEach((sl, i) => {
+    sl.style.transform = `translateX(${100 * (i - slide)}%)`;
+  });
+};
+
+goToSlide(0);
+
+const createDots = function () {
+  slides.forEach((_, i) => {
+    dotContainer.insertAdjacentHTML(
+      'beforeend',
+      `<button class= "dots__dot" data-slide="${i}"></button>`
+    );
+  });
+};
+createDots();
+
+const activeDots = function (slide) {
+  document.querySelectorAll('.dots__dot').forEach(el => {
+    el.classList.remove('dots__dot--active');
+  });
+
+  document
+    .querySelector(`.dots__dot[data-slide = "${slide}"]`)
+    .classList.add('dots__dot--active');
+};
+activeDots(0);
+
+dotContainer.addEventListener('click', function (e) {
+  if (e.target.classList.contains('dots__dot')) {
+    const slide = e.target.dataset.slide;
+    goToSlide(slide);
+    activeDots(slide);
+  }
+});
+
+const nextSlide = function () {
+  if (curSlide === maxSlide) {
+    curSlide = 0;
+  } else curSlide++;
+  goToSlide(curSlide);
+  activeDots(curSlide);
+};
+
+const prevSlide = function () {
+  if (curSlide === 0) {
+    curSlide = maxSlide;
+  } else curSlide--;
+  goToSlide(curSlide);
+  activeDots(curSlide);
+};
+
+btnRight.addEventListener('click', nextSlide);
+btnLeft.addEventListener('click', prevSlide);
+
+window.addEventListener('keydown', function (e) {
+  // console.log(e);
+  // if (e.key === 'ArrowRight') nextSlide();
+  // if (e.key === 'ArrowLeft') prevSlide();
+  e.key === 'ArrowRight' && nextSlide();
+  e.key === 'ArrowLeft' && prevSlide();
+});
+
 // const message = document.createElement('div');
 // message.classList.add('cookie-message');
 // // message.textContent = 'we use cookies for improved functionality and analytics';
 // message.innerHTML =
 //   'we use cookied for improved functionality and analytics.<button class="btn btn--close-cookie">Got it!</button>';
 // //
-// const header = document.querySelector('.header');
+// // const header = document.querySelector('.header');
 // header.append(message);
 // document.querySelector('.btn--close-cookie').addEventListener('click', () => {
 //   message.remove();
